@@ -12,3 +12,6 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+# logging
+Token_*_Deployment.json
