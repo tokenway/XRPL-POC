@@ -4,11 +4,11 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "issue": "ts-node scripts/create_issuer.ts",
-    "create-user": "ts-node scripts/create_user.ts",
-    "authorize": "ts-node scripts/authorize_trustline.ts",
-    "transfer": "ts-node scripts/transfer_token.ts",
-    "burn": "ts-node scripts/burn_token.ts"
+    "issue": "ts-node scripts/create-issuer.ts",
+    "create-user": "ts-node scripts/create-user.ts",
+    "authorize": "ts-node scripts/authorize-trustline.ts",
+    "transfer": "ts-node scripts/transfer-token.ts",
+    "burn": "ts-node scripts/burn-token.ts"
   },
   "keywords": [],
   "author": "",
