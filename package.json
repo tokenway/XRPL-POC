@@ -8,7 +8,8 @@
     "create-user": "ts-node scripts/create-user.ts",
     "authorize": "ts-node scripts/authorize-trustline.ts",
     "transfer": "ts-node scripts/transfer-token.ts",
-    "burn": "ts-node scripts/burn-token.ts"
+    "burn": "ts-node scripts/burn-token.ts",
+    "check-balance": "ts-node scripts/check-balance.ts"
   },
   "keywords": [],
   "author": "",

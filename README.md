@@ -109,3 +109,20 @@ ts-node scripts/burn_token.ts <TOKEN_CODE> <AMOUNT>
 
 npm run burn <TOKEN_CODE> <AMOUNT>
 ```
+
+### 5. `check-balance.ts`
+
+Checks the balance of a specific issued token for a user account on the XRPL.
+
+**Arguments:**
+
+- `<TOKEN_CODE>` – The token symbol (e.g., `ABC`)
+- `<USER_ADDRESS>` - Address of the user
+
+**Usage:**
+
+```bash
+ts-node scripts/check-balance.ts <TOKEN_CODE> <USER_ADDRESS>
+
+npm run check-balance <TOKEN_CODE> <USER_ADDRESS>
+```
