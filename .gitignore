@@ -15,3 +15,5 @@ yarn-error.log*
 
 # logging
 Token_*_Deployment.json
+User_*.json
+logs
