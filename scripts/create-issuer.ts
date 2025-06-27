@@ -5,6 +5,7 @@ import {
   Payment,
 } from "xrpl"
 import * as fs from "fs"
+import * as path from "path"
 import { metaResultOK, TF_SET_AUTH } from "./helpers"
 
 async function mainCreateIssuer() {
@@ -89,8 +90,16 @@ async function mainCreateIssuer() {
     issuer: { address: issuer.classicAddress, secret: issuer.seed },
     distribution: { address: dist.classicAddress, secret: dist.seed },
   }
-  fs.writeFileSync(`Token_${token}_Deployment.json`, JSON.stringify(info, null, 2))
-  console.log("Deployment saved.")
+
+  const logsDir = path.resolve(__dirname, "../logs")
+  if (!fs.existsSync(logsDir)) {
+    fs.mkdirSync(logsDir, { recursive: true })
+  }
+
+  const filePath = path.join(logsDir, `Token_${token}_Deployment.json`)
+  fs.writeFileSync(filePath, JSON.stringify(info, null, 2))
+  console.log("Deployment saved at", filePath)
+
   await client.disconnect()
 }
 

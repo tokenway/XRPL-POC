@@ -1,5 +1,6 @@
 import { Client as C4, Wallet as W4, Payment as P4 } from "xrpl"
-import * as f4 from "fs"
+import * as fs from "fs"
+import * as path from "path"
 import { metaResultOK as ok4 } from "./helpers"
 
 async function mainTransfer() {
@@ -8,7 +9,9 @@ async function mainTransfer() {
     process.exit(1)
   }
   const [token, from, to, amount] = process.argv.slice(2)
-  const dep = JSON.parse(f4.readFileSync(`Token_${token}_Deployment.json`, "utf8"))
+  const depPath = path.resolve(__dirname, "../logs", `Token_${token}_Deployment.json`)
+  const dep = JSON.parse(fs.readFileSync(depPath, "utf8"))
+
   let secret: string | undefined
   if (from === dep.distribution.address) secret = dep.distribution.secret
   if (from === dep.issuer.address) secret = dep.issuer.secret
