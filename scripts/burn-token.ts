@@ -1,5 +1,6 @@
 import { Client as C5, Wallet as W5, Payment as P5 } from "xrpl"
-import * as f5 from "fs"
+import * as fs from "fs"
+import * as path from "path"
 import { metaResultOK as ok5 } from "./helpers"
 
 async function mainBurn() {
@@ -9,7 +10,8 @@ async function mainBurn() {
   }
   const token = process.argv[2]
   const burnAmt = process.argv[3]
-  const dep = JSON.parse(f5.readFileSync(`Token_${token}_Deployment.json`, "utf8"))
+  const depPath = path.resolve(__dirname, "../logs", `Token_${token}_Deployment.json`)
+  const dep = JSON.parse(fs.readFileSync(depPath, "utf8"))
 
   const client = new C5("wss://s.altnet.rippletest.net:51233")
   await client.connect()

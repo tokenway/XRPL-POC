@@ -3,8 +3,10 @@ import {
   TrustSet as TrustSet2,
 } from "xrpl"
 import * as fs2 from "fs"
+import * as path from "path"
 import { metaResultOK as ok2 } from "./helpers"
 
+// TODO: accept trustline limit from argv if needed
 async function mainCreateUser() {
   if (process.argv.length < 3) {
     console.error("Usage: ts-node create_user.ts <TOKEN_CODE>")
@@ -31,8 +33,13 @@ async function mainCreateUser() {
   }
   const res = await client.submitAndWait(trust, { wallet: user })
   if (!ok2(res.result.meta)) throw new Error("Trust line create failed")
+
+  // NOTE: directory existence is safe because this script is supposed to be run after create-issuer script.
+  const logsDir = path.resolve(__dirname, "../logs")
+
+  const filePath = path.join(logsDir, `User_${token}_${user.classicAddress}.json`)
   fs2.writeFileSync(
-    `User_${token}_${user.classicAddress}.json`,
+    filePath,
     JSON.stringify({ address: user.classicAddress, secret: user.seed }, null, 2)
   )
   console.log("User file saved.")

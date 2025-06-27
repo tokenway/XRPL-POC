@@ -1,5 +1,6 @@
 import { Client as C3, Wallet as W3, TrustSet as T3 } from "xrpl"
-import * as f3 from "fs"
+import * as fs from "fs"
+import * as path from "path"
 import { metaResultOK as ok3, TF_SET_AUTH as AUTH } from "./helpers"
 
 async function mainAuth() {
@@ -9,7 +10,8 @@ async function mainAuth() {
   }
   const token = process.argv[2]
   const userAddr = process.argv[3]
-  const dep = JSON.parse(f3.readFileSync(`Token_${token}_Deployment.json`, "utf8"))
+  const logPath = path.resolve(__dirname, `../logs/Token_${token}_Deployment.json`)
+  const dep = JSON.parse(fs.readFileSync(logPath, "utf8"))
 
   const client = new C3("wss://s.altnet.rippletest.net:51233")
   await client.connect()
@@ -22,7 +24,7 @@ async function mainAuth() {
     Flags: AUTH,
   }
   const res = await client.submitAndWait(auth, { wallet: issuerWallet })
-  
+
   if (!ok3(res.result.meta)) throw new Error("Auth failed")
   console.log("Trust line authorized.")
   await client.disconnect()
