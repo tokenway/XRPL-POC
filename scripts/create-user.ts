@@ -4,7 +4,7 @@ import {
 } from "xrpl"
 import * as fs from "fs"
 import * as path from "path"
-import { metaResultOK as ok2 } from "./helpers"
+import { metaResultOK as ok2 } from "./utils/helpers"
 
 // TODO: accept trustline limit from argv if needed
 async function mainCreateUser() {

@@ -1,7 +1,7 @@
 import { Client as C4, Wallet as W4, Payment as P4 } from "xrpl"
 import * as fs from "fs"
 import * as path from "path"
-import { metaResultOK as ok4 } from "./helpers"
+import { metaResultOK as ok4 } from "./utils/helpers"
 
 async function mainTransfer() {
   if (process.argv.length < 6) {

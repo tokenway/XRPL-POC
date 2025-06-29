@@ -6,7 +6,7 @@ import {
 } from "xrpl"
 import * as fs from "fs"
 import * as path from "path"
-import { metaResultOK, TF_SET_AUTH } from "./helpers"
+import { metaResultOK, TF_SET_AUTH } from "./utils/helpers"
 
 async function mainCreateIssuer() {
   if (process.argv.length < 4) {
