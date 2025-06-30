@@ -1,7 +1,7 @@
 import { Client as C3, Wallet as W3, TrustSet as T3 } from "xrpl"
 import * as fs from "fs"
 import * as path from "path"
-import { metaResultOK as ok3, TF_SET_AUTH as AUTH } from "./helpers"
+import { metaResultOK as ok3, TF_SET_AUTH as AUTH } from "./utils/helpers"
 
 async function mainAuth() {
   if (process.argv.length < 4) {

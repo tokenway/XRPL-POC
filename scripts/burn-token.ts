@@ -1,7 +1,7 @@
 import { Client as C5, Wallet as W5, Payment as P5 } from "xrpl"
 import * as fs from "fs"
 import * as path from "path"
-import { metaResultOK as ok5 } from "./helpers"
+import { metaResultOK as ok5 } from "./utils/helpers"
 
 async function mainBurn() {
   if (process.argv.length < 4) {

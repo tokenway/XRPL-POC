@@ -9,7 +9,9 @@
     "authorize": "ts-node scripts/authorize-trustline.ts",
     "transfer": "ts-node scripts/transfer-token.ts",
     "burn": "ts-node scripts/burn-token.ts",
-    "check-balance": "ts-node scripts/check-balance.ts"
+    "check-balance": "ts-node scripts/check-custom-token-balance.ts",
+    "create-usdc-trustline": "ts-node scripts/usdc/create-usdc-trustline.ts",
+    "check-usdc-balance": "ts-node scripts/usdc/check-usdc-balance.ts"
   },
   "keywords": [],
   "author": "",
