@@ -1,5 +1,4 @@
 import { Client, TrustSet, Wallet } from "xrpl"
-import { xrplClient } from "../setup/client"
 import { metaResultOK } from "./helpers"
 
 export async function createTrustline(
@@ -7,7 +6,7 @@ export async function createTrustline(
     userWallet: Wallet,
     tokenIssuerAddress: string,
     tokenCode: string,
-    xprlClient: Client
+    xrplClient: Client
 ) {
     const trust: TrustSet = {
         TransactionType: "TrustSet",

@@ -1,6 +1,7 @@
-import { Client } from "xrpl"
 import * as fs from "fs"
 import * as path from "path"
+import { xrplClient } from "./setup/client"
+import { checkBalance } from "./utils/check-balance"
 
 async function main() {
   if (process.argv.length < 4) {
@@ -21,25 +22,18 @@ async function main() {
   const deployment = JSON.parse(fs.readFileSync(depPath, "utf8"))
   const issuerAddr: string = deployment.issuer.address
 
-  const client = new Client("wss://s.altnet.rippletest.net:51233")
-  await client.connect()
+  await xrplClient.connect()
 
-  const { result } = await client.request({
-    command: "account_lines",
-    account: userAddr,
-    peer: issuerAddr,
-    ledger_index: "validated",
-  })
-
-  // find the line that matches our currency
-  const line = (result.lines as any[]).find(
-    (l) => l.currency === token && l.account === issuerAddr,
+  const balance = await checkBalance(
+    userAddr,
+    token,
+    issuerAddr,
+    xrplClient
   )
 
-  const balance = line ? line.balance : "0"
   console.log(`Balance of ${token} for ${userAddr}: ${balance}`)
 
-  await client.disconnect()
+  await xrplClient.disconnect()
 }
 
 if (require.main === module) main()

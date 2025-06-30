@@ -1,7 +1,8 @@
-import { Client as C5, Wallet as W5, Payment as P5 } from "xrpl"
+import { Wallet, Payment } from "xrpl"
 import * as fs from "fs"
 import * as path from "path"
-import { metaResultOK as ok5 } from "./utils/helpers"
+import { metaResultOK } from "./utils/helpers"
+import { xrplClient } from "./setup/client"
 
 async function mainBurn() {
   if (process.argv.length < 4) {
@@ -13,20 +14,19 @@ async function mainBurn() {
   const depPath = path.resolve(__dirname, "../logs", `Token_${token}_Deployment.json`)
   const dep = JSON.parse(fs.readFileSync(depPath, "utf8"))
 
-  const client = new C5("wss://s.altnet.rippletest.net:51233")
-  await client.connect()
-  const distWallet = W5.fromSeed(dep.distribution.secret)
+  await xrplClient.connect()
+  const distWallet = Wallet.fromSeed(dep.distribution.secret)
 
-  const burn: P5 = {
+  const burn: Payment = {
     TransactionType: "Payment",
     Account: dep.distribution.address,
     Destination: dep.issuer.address,
     Amount: { currency: token, issuer: dep.issuer.address, value: burnAmt },
   }
-  const res = await client.submitAndWait(burn, { wallet: distWallet })
-  if (!ok5(res.result.meta)) throw new Error("Burn failed")
+  const res = await xrplClient.submitAndWait(burn, { wallet: distWallet })
+  if (!metaResultOK(res.result.meta)) throw new Error("Burn failed")
   console.log("Burn success.")
-  await client.disconnect()
+  await xrplClient.disconnect()
 }
 
 if (require.main === module) mainBurn()

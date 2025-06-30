@@ -7,6 +7,7 @@ import {
 import * as fs from "fs"
 import * as path from "path"
 import { metaResultOK, TF_SET_AUTH } from "./utils/helpers"
+import { xrplClient } from "./setup/client"
 
 async function mainCreateIssuer() {
   if (process.argv.length < 4) {
@@ -16,12 +17,11 @@ async function mainCreateIssuer() {
   const token = process.argv[2]
   const supply = process.argv[3]
 
-  const client = new Client("wss://s.altnet.rippletest.net:51233")
-  await client.connect()
+  await xrplClient.connect()
 
   // Fund issuer (cold) and distributor (hot)
-  const { wallet: issuer } = await client.fundWallet()
-  const { wallet: dist } = await client.fundWallet()
+  const { wallet: issuer } = await xrplClient.fundWallet()
+  const { wallet: dist } = await xrplClient.fundWallet()
 
   console.log("Issuer:", issuer.classicAddress)
   console.log("Distribution:", dist.classicAddress)
@@ -38,7 +38,7 @@ async function mainCreateIssuer() {
       Account: issuer.classicAddress,
       SetFlag: f.flag,
     }
-    const res = await client.submitAndWait(tx, { wallet: issuer })
+    const res = await xrplClient.submitAndWait(tx, { wallet: issuer })
     if (!metaResultOK(res.result.meta))
       throw new Error(`Failed to set ${f.description}`)
   }
@@ -53,7 +53,7 @@ async function mainCreateIssuer() {
       value: supply,
     },
   }
-  const tRes = await client.submitAndWait(trust, { wallet: dist })
+  const tRes = await xrplClient.submitAndWait(trust, { wallet: dist })
   if (!metaResultOK(tRes.result.meta)) throw new Error("TrustSet failed")
 
   // Authorize trust line (issuer side)
@@ -67,7 +67,7 @@ async function mainCreateIssuer() {
     },
     Flags: TF_SET_AUTH,
   }
-  const aRes = await client.submitAndWait(auth, { wallet: issuer })
+  const aRes = await xrplClient.submitAndWait(auth, { wallet: issuer })
   if (!metaResultOK(aRes.result.meta)) throw new Error("Auth failed")
 
   // Issue initial supply to distributor
@@ -81,7 +81,7 @@ async function mainCreateIssuer() {
       value: supply,
     },
   }
-  const pRes = await client.submitAndWait(pay, { wallet: issuer })
+  const pRes = await xrplClient.submitAndWait(pay, { wallet: issuer })
   if (!metaResultOK(pRes.result.meta)) throw new Error("Initial issuance failed")
 
   const info = {
@@ -100,7 +100,7 @@ async function mainCreateIssuer() {
   fs.writeFileSync(filePath, JSON.stringify(info, null, 2))
   console.log("Deployment saved at", filePath)
 
-  await client.disconnect()
+  await xrplClient.disconnect()
 }
 
 if (require.main === module) mainCreateIssuer()
