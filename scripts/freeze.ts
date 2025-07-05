@@ -2,6 +2,7 @@ import * as fs from "fs"
 import * as path from "path"
 import { freezeGlobally, freezeTrustLine } from "./utils/freeze-util"
 import { Wallet } from "xrpl"
+import { xrplClient } from "./setup/client"
 
 async function main() {
   const args = process.argv.slice(2)
@@ -25,16 +26,30 @@ async function main() {
 
   const dep = JSON.parse(fs.readFileSync(depPath, "utf-8"))
 
+  await xrplClient.connect()
+
   const issuerWallet = Wallet.fromSecret(dep.issuer.secret)
 
   if (mode === "global") {
-    await freezeGlobally(dep.issuer.address, issuerWallet)
+    await freezeGlobally(
+      dep.issuer.address,
+      issuerWallet,
+      xrplClient
+    )
   } else if (mode === "trust") {
     if (!holder) {
       console.error("HOLDER_ADDRESS is required in trust freeze mode")
       process.exit(1)
     }
-    await freezeTrustLine(dep.issuer.address, holder, token, issuerWallet)
+    await freezeTrustLine(
+      dep.issuer.address,
+      holder,
+      token,
+      issuerWallet,
+      xrplClient
+    )
+
+    await xrplClient.disconnect()
   } else {
     console.error("Invalid mode. Use 'global' or 'trust'.")
     process.exit(1)

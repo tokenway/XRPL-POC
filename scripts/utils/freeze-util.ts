@@ -1,9 +1,12 @@
-import { xrplClient } from "../setup/client"
 import { XRPL_FLAGS, XRPL_TX_TYPES } from "../constants"
-import { AccountSet, TrustSet, Wallet, AccountSetAsfFlags, validate } from "xrpl"
+import { AccountSet, TrustSet, Wallet, AccountSetAsfFlags, validate, Client } from "xrpl"
 import { metaResultOK } from "./helpers"
 
-export async function freezeGlobally(issuerAddress: string, issuerWallet: Wallet) {
+export async function freezeGlobally(
+  issuerAddress: string,
+  issuerWallet: Wallet,
+  xrplClient: Client
+) {
   await xrplClient.connect()
 
   const tx: AccountSet = {
@@ -26,9 +29,12 @@ export async function freezeTrustLine(
   issuerAddress: string,
   holderAddress: string,
   currencyCode: string,
-  issuerWallet: Wallet
+  issuerWallet: Wallet,
+  xrplClient: Client
 ) {
   await xrplClient.connect()
+
+  const accountLines = await xrplClient
 
   const tx: TrustSet = {
     TransactionType: XRPL_TX_TYPES.TRUST_SET,
