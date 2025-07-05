@@ -2,7 +2,7 @@ import { Wallet } from "xrpl"
 import * as fs from "fs/promises"
 import * as path from "path"
 
-import { USDC_CODE, USDC_ISSUER } from "./constant"
+import { USDC_ISSUER, USDC_CODE } from "../constants"
 import { createEscrow } from "../utils/create-escrow"
 import { xrplClient } from "../setup/client"
 
