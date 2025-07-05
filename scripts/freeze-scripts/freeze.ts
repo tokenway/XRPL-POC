@@ -1,8 +1,8 @@
 import * as fs from "fs"
 import * as path from "path"
-import { freezeGlobally, freezeTrustLine } from "./utils/freeze-util"
 import { Wallet } from "xrpl"
-import { xrplClient } from "./setup/client"
+import { xrplClient } from "../setup/client"
+import { freezeGlobally, freezeTrustLine } from "../utils/freeze-util"
 
 async function main() {
   const args = process.argv.slice(2)
@@ -17,7 +17,7 @@ async function main() {
   }
 
   const [mode, token, holder] = args
-  const depPath = path.resolve(__dirname, "../logs", `Token_${token}_Deployment.json`)
+  const depPath = path.resolve(__dirname, "../../logs", `Token_${token}_Deployment.json`)
 
   if (!fs.existsSync(depPath)) {
     console.error("Deployment JSON file not found:", depPath)
