@@ -10,6 +10,7 @@ import {
 
 import { XRPL_FLAGS, XRPL_TX_TYPES } from "../constants"
 import { metaResultOK } from "./helpers"
+import { findTrustline } from "./find-trustline"
 
 export async function freezeGlobally(
   issuerAddress: string,
@@ -41,24 +42,12 @@ export async function freezeTrustLine(
   issuerWallet: Wallet,
   xrplClient: Client
 ) {
-  await xrplClient.connect()
-
-  const accountLines = await xrplClient.request({
-    "command": "account_lines",
-    "account": issuerAddress,
-    "peer": holderAddress,
-    "ledger_index": "validated"
-  })
-  const trustlines = accountLines.result.lines
-  console.log("Trustlines found: ", trustlines)
-
-  let trustline = null
-  for (let i = 0; i < trustlines.length; i++) {
-    if (trustlines[i].currency === currencyCode) {
-      trustline = trustlines[i]
-      break
-    }
-  }
+  const trustline = await findTrustline(
+    issuerAddress,
+    holderAddress,
+    currencyCode,
+    xrplClient
+  )
 
   if (trustline === null) {
     console.error(`No ${currencyCode} trustline is set between
@@ -84,6 +73,44 @@ export async function freezeTrustLine(
 
   if (!metaResultOK(res.result.meta)) throw new Error("Individual trust line freeze failed")
   console.log(`Trust line frozen: ${holderAddress}`)
+}
 
-  await xrplClient.disconnect()
+export async function unfreezeTrustLine(
+  issuerAddress: string,
+  holderAddress: string,
+  currencyCode: string,
+  issuerWallet: Wallet,
+  xrplClient: Client
+) {
+  const trustline = await findTrustline(
+    issuerAddress,
+    holderAddress,
+    currencyCode,
+    xrplClient
+  )
+
+  if (trustline === null) {
+    console.error(`No ${currencyCode} trustline is set between
+      ${issuerAddress} and ${holderAddress}`)
+
+    return
+  }
+
+  const tx: TrustSet = {
+    TransactionType: XRPL_TX_TYPES.TRUST_SET,
+    Account: issuerAddress,
+    LimitAmount: {
+      currency: currencyCode,
+      issuer: trustline.account,
+      value: trustline.limit,
+    },
+    Flags: TrustSetFlags.tfClearFreeze
+  }
+
+  validate(tx)
+
+  const res = await xrplClient.submitAndWait(tx, { wallet: issuerWallet })
+
+  if (!metaResultOK(res.result.meta)) throw new Error("Individual trust line unfreeze failed")
+    console.log(`Trust line unfrozen: ${holderAddress}`)
 }
