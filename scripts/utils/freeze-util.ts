@@ -1,5 +1,14 @@
+import {
+  AccountSet,
+  TrustSet,
+  Wallet,
+  AccountSetAsfFlags,
+  validate,
+  Client,
+  TrustSetFlags
+} from "xrpl"
+
 import { XRPL_FLAGS, XRPL_TX_TYPES } from "../constants"
-import { AccountSet, TrustSet, Wallet, AccountSetAsfFlags, validate, Client } from "xrpl"
 import { metaResultOK } from "./helpers"
 
 export async function freezeGlobally(
@@ -34,18 +43,42 @@ export async function freezeTrustLine(
 ) {
   await xrplClient.connect()
 
-  const accountLines = await xrplClient
+  const accountLines = await xrplClient.request({
+    "command": "account_lines",
+    "account": issuerAddress,
+    "peer": holderAddress,
+    "ledger_index": "validated"
+  })
+  const trustlines = accountLines.result.lines
+  console.log("Trustlines found: ", trustlines)
+
+  let trustline = null
+  for (let i = 0; i < trustlines.length; i++) {
+    if (trustlines[i].currency === currencyCode) {
+      trustline = trustlines[i]
+      break
+    }
+  }
+
+  if (trustline === null) {
+    console.error(`No ${currencyCode} trustline is set between
+      ${issuerAddress} and ${holderAddress}`)
+
+    return
+  }
 
   const tx: TrustSet = {
     TransactionType: XRPL_TX_TYPES.TRUST_SET,
     Account: issuerAddress,
     LimitAmount: {
       currency: currencyCode,
-      issuer: holderAddress,
-      value: "0",
+      issuer: trustline.account,
+      value: trustline.limit,
     },
-    Flags: XRPL_FLAGS.TF_SET_FREEZE,
+    Flags: TrustSetFlags.tfSetFreeze,
   }
+
+  validate(tx)
 
   const res = await xrplClient.submitAndWait(tx, { wallet: issuerWallet })
 
