@@ -8,5 +8,5 @@
     },
     "include": [
         "scripts/**/*.ts"
-    ]
+, "scripts/utils/create-escrow.js"    ]
 }
