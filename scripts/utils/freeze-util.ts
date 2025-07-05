@@ -1,6 +1,6 @@
 import { xrplClient } from "../setup/client"
 import { XRPL_FLAGS, XRPL_TX_TYPES } from "../constants"
-import { AccountSet, TrustSet, Wallet } from "xrpl"
+import { AccountSet, TrustSet, Wallet, AccountSetAsfFlags, validate } from "xrpl"
 import { metaResultOK } from "./helpers"
 
 export async function freezeGlobally(issuerAddress: string, issuerWallet: Wallet) {
@@ -9,8 +9,10 @@ export async function freezeGlobally(issuerAddress: string, issuerWallet: Wallet
   const tx: AccountSet = {
     TransactionType: XRPL_TX_TYPES.ACCOUNT_SET,
     Account: issuerAddress,
-    SetFlag: XRPL_FLAGS.GLOBAL_FREEZE,
+    SetFlag: AccountSetAsfFlags.asfGlobalFreeze,
   }
+
+  validate(tx)
 
   const res = await xrplClient.submitAndWait(tx, { wallet: issuerWallet })
 
