@@ -14,7 +14,8 @@
     "check-usdc-balance": "ts-node scripts/usdc/check-usdc-balance.ts",
     "create-usdc-escrow": "ts-node scripts/usdc/create-escrow.ts",
     "freeze": "ts-node scripts/freeze-scripts/freeze.ts",
-    "unfreeze": "ts-node scripts/freeze-scripts/unfreeze.ts"
+    "unfreeze": "ts-node scripts/freeze-scripts/unfreeze.ts",
+    "clawback": "ts-node scripts/clawback.ts"
   },
   "keywords": [],
   "author": "",
