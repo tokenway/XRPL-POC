@@ -17,8 +17,6 @@ export async function freezeGlobally(
   issuerWallet: Wallet,
   xrplClient: Client
 ) {
-  await xrplClient.connect()
-
   const tx: AccountSet = {
     TransactionType: XRPL_TX_TYPES.ACCOUNT_SET,
     Account: issuerAddress,
@@ -31,8 +29,6 @@ export async function freezeGlobally(
 
   if (!metaResultOK(res.result.meta)) throw new Error("Global freeze failed")
   console.log("Global freeze enabled.")
-
-  await xrplClient.disconnect()
 }
 
 export async function freezeTrustLine(
@@ -113,4 +109,23 @@ export async function unfreezeTrustLine(
 
   if (!metaResultOK(res.result.meta)) throw new Error("Individual trust line unfreeze failed")
     console.log(`Trust line unfrozen: ${holderAddress}`)
+}
+
+export async function unfreezeGlobally(
+  issuerAddress: string,
+  issuerWallet: Wallet,
+  xrplClient: Client
+) {
+  const tx: AccountSet = {
+    TransactionType: XRPL_TX_TYPES.ACCOUNT_SET,
+    Account: issuerAddress,
+    ClearFlag: AccountSetAsfFlags.asfGlobalFreeze
+  }
+
+  validate(tx)
+
+  const res = await xrplClient.submitAndWait(tx, { wallet: issuerWallet })
+
+  if (!metaResultOK(res.result.meta)) throw new Error("Global unfreeze failed")
+    console.log("Global freeze disabled.")
 }
