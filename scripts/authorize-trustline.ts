@@ -6,7 +6,7 @@ import { xrplClient } from "./setup/client"
 
 async function mainAuth() {
   if (process.argv.length < 4) {
-    console.error("Usage: ts-node authorize_trustline.ts <TOKEN_CODE> <USER_ADDRESS>")
+    console.error("Usage: ts-node authorize-trustline.ts <TOKEN_CODE> <USER_ADDRESS>")
     process.exit(1)
   }
   const token = process.argv[2]

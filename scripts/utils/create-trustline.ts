@@ -21,8 +21,8 @@ export async function createTrustline(
 
     const res = await xrplClient.submitAndWait(trust, { wallet: userWallet })
     if (!metaResultOK(res.result.meta)) {
-        throw new Error("Trust line against USDC create failed")
+        throw new Error(`Trust line against ${tokenCode} create failed`)
     } else {
-        console.log("Trustline against USDC created!")
+        console.log(`Trustline against ${tokenCode} created!`)
     }
 }
