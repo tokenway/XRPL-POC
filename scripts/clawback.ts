@@ -1,4 +1,4 @@
-import { Wallet, Clawback, Client } from "xrpl"
+import { Wallet, Clawback } from "xrpl"
 import * as fs from "fs"
 import * as path from "path"
 import { xrplClient } from "./setup/client"

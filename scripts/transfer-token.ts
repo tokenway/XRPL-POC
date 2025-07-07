@@ -28,8 +28,19 @@ async function mainTransfer() {
     Amount: { currency: token, issuer: dep.issuer.address, value: amount },
   }
   const res = await xrplClient.submitAndWait(pay, { wallet: srcWallet })
-  if (!metaResultOK(res.result.meta)) throw new Error("Transfer failed")
+
+  if (!metaResultOK(res.result.meta)) {
+    const result = res.result;
+    const txResult = (result.meta as { TransactionResult?: string }).TransactionResult || "Unknown error";
+    
+    console.error("Transfer failed.")
+    console.error("Transaction Result:", txResult)
+    console.error("Meta Data:", result.meta)
+    throw new Error(`Transfer failed with result: ${txResult}`)
+  }
+
   console.log("Transfer success.")
+
   await xrplClient.disconnect()
 }
 
