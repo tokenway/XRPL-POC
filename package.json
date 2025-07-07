@@ -12,7 +12,10 @@
     "check-balance": "ts-node scripts/check-custom-token-balance.ts",
     "create-usdc-trustline": "ts-node scripts/usdc/create-usdc-trustline.ts",
     "check-usdc-balance": "ts-node scripts/usdc/check-usdc-balance.ts",
-    "create-usdc-escrow": "ts-node scripts/usdc/create-escrow.ts"
+    "create-usdc-escrow": "ts-node scripts/usdc/create-escrow.ts",
+    "freeze": "ts-node scripts/freeze-scripts/freeze.ts",
+    "unfreeze": "ts-node scripts/freeze-scripts/unfreeze.ts",
+    "clawback": "ts-node scripts/clawback.ts"
   },
   "keywords": [],
   "author": "",

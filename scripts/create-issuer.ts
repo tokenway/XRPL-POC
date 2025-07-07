@@ -1,8 +1,8 @@
 import {
-  Client,
   AccountSet,
   TrustSet,
   Payment,
+  AccountSetAsfFlags
 } from "xrpl"
 import * as fs from "fs"
 import * as path from "path"
@@ -26,15 +26,16 @@ async function mainCreateIssuer() {
   console.log("Issuer:", issuer.classicAddress)
   console.log("Distribution:", dist.classicAddress)
 
-  // Enable DefaultRipple (8) & RequireAuth (2) flags on issuer
+  // Enable DefaultRipple & RequireAuth & TrustLineClawback flags on issuer
   const flags: Array<{ flag: number; description: string }> = [
-    { flag: 8, description: "DefaultRipple" },
-    { flag: 2, description: "RequireAuth" },
+    { flag: AccountSetAsfFlags.asfDefaultRipple, description: "DefaultRipple" },
+    { flag: AccountSetAsfFlags.asfRequireAuth, description: "RequireAuth" },
+    { flag: AccountSetAsfFlags.asfAllowTrustLineClawback, description: "Clawback" },
   ]
 
   for (const f of flags) {
     const tx: AccountSet = {
-      TransactionType: "AccountSet",
+      TransactionType: "AccountSet", 
       Account: issuer.classicAddress,
       SetFlag: f.flag,
     }

@@ -5,7 +5,7 @@ import {
 import * as fs from "fs/promises"
 import * as path from "path"
 
-import { USDC_CODE, USDC_ISSUER } from "./constant"
+import { USDC_ISSUER, USDC_CODE } from "../constants"
 import { createTrustline } from "../utils/create-trustline"
 
 async function mainCreateUSDCTrustline() {

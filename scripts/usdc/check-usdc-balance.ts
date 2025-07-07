@@ -1,6 +1,6 @@
-import { Client } from "xrpl";
-import { USDC_ISSUER, USDC_CODE } from "./constant";
-import { checkBalance } from "../utils/check-balance";
+import { Client } from "xrpl"
+import { USDC_CODE, USDC_ISSUER } from "../constants"
+import { checkBalance } from "../utils/check-balance"
 
 async function main() {
     if (process.argv.length < 3) {

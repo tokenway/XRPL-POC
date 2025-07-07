@@ -1,7 +1,7 @@
 import { Wallet, Payment } from "xrpl"
 import * as fs from "fs"
 import * as path from "path"
-import { metaResultOK as ok4 } from "./utils/helpers"
+import { metaResultOK } from "./utils/helpers"
 import { xrplClient } from "./setup/client"
 
 async function mainTransfer() {
@@ -28,7 +28,7 @@ async function mainTransfer() {
     Amount: { currency: token, issuer: dep.issuer.address, value: amount },
   }
   const res = await xrplClient.submitAndWait(pay, { wallet: srcWallet })
-  if (!ok4(res.result.meta)) throw new Error("Transfer failed")
+  if (!metaResultOK(res.result.meta)) throw new Error("Transfer failed")
   console.log("Transfer success.")
   await xrplClient.disconnect()
 }
