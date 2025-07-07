@@ -32,10 +32,10 @@ async function mainClawback() {
     Account: issuerAddress,
     Amount: {
       currency: token,
-      issuer: issuerAddress,
+      issuer: userAddr,
       value: amount,
     },
-    Holder: userAddr
+    // Holder: userAddr
   }
 
   const result = await xrplClient.submitAndWait(clawbackTx, { wallet: issuerWallet })
